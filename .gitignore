@@ -6,3 +6,7 @@ chain.pem
 fullchain.pem
 key.pem
 privkey.pem
+postit.txt
+style.css.map
+style.scss
+js/letsencrypt.log
