@@ -19,12 +19,14 @@ switch (window.location.pathname) {
         console.log('Acceuil')
         listing(url)
         break
+    case '/P5/products.html':
     case '/eshop/products.html':
     case '/products.html':
         let id = params.get("id");
         console.log('Produit, id : ' + id)
         id ? prod(id) : notfound()
         break
+    case '/P5/cart.html':
     case '/eshop/cart.html':
     case '/cart.html':
         console.log('Panier')
@@ -34,6 +36,7 @@ switch (window.location.pathname) {
             ValidRegex(inputs)
         })
         break
+    case '/P5/order.html':
     case '/eshop/order.html':
     case '/order.html':
         let order = params.get("order");
