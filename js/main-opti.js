@@ -10,6 +10,8 @@ document.querySelector('.cart').textContent = localStorage.getItem('cartNumbers'
 console.log(window.location.pathname)
 
 switch (window.location.pathname) {
+    case '/P5/index.html':
+    case '/P5/':
     case '/eshop/index.html':
     case '/eshop/':
     case '/index.html':
