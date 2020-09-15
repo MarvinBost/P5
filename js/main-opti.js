@@ -53,12 +53,13 @@ for (let i = 0; i < carts.length; i++) {
 // Fonctions
 
 function listing(url) {
-    fetch(url).then(function (response) {
-        if (response.ok) {
-            response.json().then(function (json) {
-                var list = document.querySelector("#list")
-                Object.values(json).map(items => {
-                    list.innerHTML += `
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    var list = document.querySelector("#list")
+                    Object.values(json).map(items => {
+                        list.innerHTML += `
                         <div class="col-12 col-sm-8 col-md-4 col-lg-4 py-2">
                             <div class="card shadow-lg">
                                 <img class="card-img"
@@ -77,10 +78,13 @@ function listing(url) {
                                 </div>
                             </div>
                         </div>`
-                })
-            });
-        }
-    })
+                    })
+                });
+            }
+        })
+        .catch(err => {
+            window.location = '404.html'
+        })
 }
 
 function product(id) {
@@ -88,27 +92,31 @@ function product(id) {
 }
 
 function prod(id) {
-    fetch(url + '/' + id).then(function (response) {
-        if (response.ok) {
-            response.json().then(function (json) {
-                document.querySelector("#name").textContent = json.name
-                document.querySelector("#desc").textContent = json.description
-                document.querySelector("#categ").textContent = "teddies"
-                document.querySelector('.cat').setAttribute('href', '/index.html#teddies')
-                document.querySelector('img').setAttribute('src', json.imageUrl)
-                document.querySelector('#price').textContent = json.price / 100 + '€'
-                document.querySelector('.add').setAttribute('id', json._id)
-                for (let i = 0; i < json.colors.length; i++) {
-                    const color = json.colors[i]
-                    try {
-                        document.querySelector('#options').appendChild(new Option(color, i))
-                    } catch (e) {
-                        document.querySelector('#options').appendChild(new Option(color, null))
+    fetch(url + '/' + id)
+        .then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    document.querySelector("#name").textContent = json.name
+                    document.querySelector("#desc").textContent = json.description
+                    document.querySelector("#categ").textContent = "teddies"
+                    document.querySelector('.cat').setAttribute('href', '/index.html#teddies')
+                    document.querySelector('img').setAttribute('src', json.imageUrl)
+                    document.querySelector('#price').textContent = json.price / 100 + '€'
+                    document.querySelector('.add').setAttribute('id', json._id)
+                    for (let i = 0; i < json.colors.length; i++) {
+                        const color = json.colors[i]
+                        try {
+                            document.querySelector('#options').appendChild(new Option(color, i))
+                        } catch (e) {
+                            document.querySelector('#options').appendChild(new Option(color, null))
+                        }
                     }
-                }
-            })
-        }
-    })
+                })
+            }
+        })
+        .catch(err => {
+            window.location = '404.html'
+        })
 }
 
 
@@ -173,17 +181,21 @@ function ValidRegex(inputs) {
                 },
                 body: JSON.stringify(data)
             }
-            fetch(posturl, options).then((response) => {
+            fetch(posturl, options)
+                .then(response => {
 
-                response.json().then((data) => {
-                    console.log(data);
-                    localStorage.setItem('order', JSON.stringify(data))
-                    localStorage.removeItem('cartNumbers')
-                    localStorage.removeItem('totalCost')
-                    localStorage.removeItem('itemsInCart')
-                    document.location = 'order.html?order=' + data.orderId
-                });
-            })
+                    response.json().then(data => {
+                        console.log(data);
+                        localStorage.setItem('order', JSON.stringify(data))
+                        localStorage.removeItem('cartNumbers')
+                        localStorage.removeItem('totalCost')
+                        localStorage.removeItem('itemsInCart')
+                        document.location = 'order.html?order=' + data.orderId
+                    });
+                })
+                .catch(e => {
+                    window.location = '404.html'
+                })
         }
     }
 
@@ -301,7 +313,7 @@ function deleteitem(id) {
         if (json[id] != undefined) {
             const itemcount = new Promise((resolve, reject) => {
                 resolve(json[id][0].incart)
-            }).then((items) => {
+            }).then(items => {
                 let num = parseInt(localStorage.getItem('cartNumbers'))
                 num = num - items
                 localStorage.setItem('cartNumbers', num)
@@ -393,7 +405,9 @@ function displayCart() {
             } else if (parseInt(e.srcElement.defaultValue) < parseInt(inputs[i].value)) {
                 console.log('+1')
                 let price = parseInt(localStorage.getItem('totalCost')) + parseInt(cartITems[id][0].price)
+                let number = parseInt(localStorage.getItem('cartNumbers')) + 1
                 localStorage.setItem('totalCost', price)
+                localStorage.setItem('cartNumbers', number)
             }
             window.location.reload()
         });
